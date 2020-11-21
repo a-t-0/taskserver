@@ -1,7 +1,7 @@
 SEC_PARAM=high
 EXPIRATION_DAYS=365
 ORGANIZATION="Göteborg Bit Factory"
-CN=localhost
+CN=testname-VirtualBox:53589
 COUNTRY=SE
 STATE="Västra Götaland"
 LOCALITY="Göteborg"

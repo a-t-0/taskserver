@@ -44,6 +44,18 @@ set_local_host_in_vars_file_of_sourcedir() {
 	# TODO: write unit test to verify the localhost is changed correctly
 }
 
+
+# changes the local host in the vars file
+set_local_host_in_vars_file_of_pki() {
+	IP=$1
+	PORT=$2
+	TASKSERVER_TAR_NAME=$3
+	output=$(sed -i "s|CN=localhost|CN=$IP:$PORT|g" pki/vars)
+	echo $output
+	# TODO: write unit test to verify the localhost is changed correctly
+}
+
+
 generate_certificates_in_pki_of_sourcedir() {
 	TASKSERVER_TAR_NAME=$1
 	output=$(cd $TASKSERVER_TAR_NAME/pki && ./generate)

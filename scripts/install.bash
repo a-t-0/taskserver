@@ -38,10 +38,6 @@
 #!/usr/bin/env bash
 echo "Hello world"
 
-# create log directory
-sudo mkdir -p "scripts/logs" 
-sudo chown -R $USER "scripts/logs"
-
 
 # read hardcoded variables
 source scripts/hardcoded_variables.txt
@@ -60,8 +56,30 @@ echo $IP
 
 # remove logs of previous installation if existant
 source ./scripts/helper.sh
-mkdir -p src/logs
+# create log directory
+sudo mkdir -p "scripts/logs" 
+sudo chown -R $USER "scripts/logs"
 $(remove_logs) 
+
+# remove past certificates
+rm pki/$TW_USERNAME.template
+rm pki/$TW_USERNAME.key.pem
+rm pki/$TW_USERNAME.cert.pem
+
+rm pki/api.cert.pem
+rm pki/api.key.pem
+rm pki/api.template
+
+rm pki/server.cert.pem
+rm pki/server.crl.pem
+rm pki/server.key.pem
+rm pki/server.template
+
+rm pki/ca.cert.pem
+rm pki/ca.key.pem
+rm pki/ca.template
+
+rm pki/crl.template
 
 
 ## Step A: install prerequisites
@@ -218,6 +236,12 @@ LOG_FILENAME="C_9_run_taskserver_tests.txt"
 $(write_to_log $LOG_LOCATION $LOG_FILENAME $FUNCTION_OUTPUT)
 
 
+source ./scripts/D_configure_taskserver.sh
+echo "D_3"
+FUNCTION_OUTPUT=$(set_local_host_in_vars_file_of_pki $IP $PORT $TASKSERVER_TAR_NAME)
+LOG_FILENAME="D_3_set_local_host_in_vars_file_of_pki.txt"
+$(write_to_log $LOG_LOCATION $LOG_FILENAME $FUNCTION_OUTPUT)
+
 echo "D_24_d"
 FUNCTION_OUTPUT=$(modify_taskd_service_file $LINUX_USERNAME $LINUX_GROUP $TASKDDATA)
 LOG_FILENAME="D_24_d_modify_taskd_service_file.txt"
@@ -227,6 +251,7 @@ echo "D_24_e"
 FUNCTION_OUTPUT=$(copy_taskd_service_file)
 LOG_FILENAME="D_24_e_copy_taskd_service_file.txt"
 $(write_to_log $LOG_LOCATION $LOG_FILENAME $FUNCTION_OUTPUT)
+
 
 
 # Ensure spaces are handled as-is in paths read from user
@@ -609,7 +634,7 @@ fi
 log_line "Would you like to set up a user account now? [y|N]"
 #read ANSWER
 #ANSWER="${ANSWER:-N}"
-Answer=y
+ANSWER=y
 if [ "$ANSWER" == "y" ]; then
   log_line
   log_ok "Setting up user account"
@@ -618,7 +643,7 @@ if [ "$ANSWER" == "y" ]; then
     log_line "Enter the organization name for the user account [PUBLIC]"
     #read ORGNAME
     #ORGNAME="${ORGNAME:-PUBLIC}"
-    OGNAME=$TW_ORGANISATION
+    ORGNAME=$TW_ORGANISATION
 
     if [ -n "$ORGNAME" ]; then
 
@@ -702,8 +727,9 @@ if [ "$ANSWER" == "y" ]; then
     fi
 
     log_line "Create another user account? [y|N]"
-    read ANSWER
-    ANSWER="${ANSWER:-N}"
+    #read ANSWER
+    #ANSWER="${ANSWER:-N}"
+    ANSWER=n
     if [ "$ANSWER" != "y" ]; then
       break;
     fi
@@ -716,8 +742,9 @@ fi
 log
 log "Your Taskserver is configured and ready."
 log_line "Would you like to launch the server daemon? [y|N]"
-read ANSWER
-ANSWER="${ANSWER:-N}"
+#read ANSWER
+#ANSWER="${ANSWER:-N}"
+ANSWER=y
 if [ "$ANSWER" == "y" ]; then
   log_line
   log_ok "Launching"

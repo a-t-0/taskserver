@@ -24,7 +24,6 @@ then
     --sec-param $SEC_PARAM \
     --outfile ${NAME}.key.pem
 fi
-
 chmod 600 ${NAME}.key.pem
 
 if ! [ -f ${NAME}.template ]

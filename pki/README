@@ -35,3 +35,26 @@ Validate a certificate with:
 
   $ gnutls-certtool --verify --infile client.cert.pem --load-ca-certificate ca.cert.pem
 
+
+gnutls-certtool --verify --infile First.cert.pem --load-ca-certificate ca.cert.pem
+
+Checks:
+openssl s_client -CAfile /home/testname/.task/ca.cert.pem -host testname-VirtualBox -port 53589
+
+gnutls-cli testname-VirtualBox:53589
+
+# manually verify the certificate of the taskwarrior user against ca of taskwarrior:
+certtool --verify --infile /home/testname/.task/ca.cert.pem --load-ca-certificate /home/testname/.task/ca.cert.pem
+
+certtool --verify --infile /home/testname/.task/First.cert.pem --load-ca-certificate /home/testname/.task/ca.cert.pem
+
+# manually verify the certificate of the taskwarrior user against ca of task server:
+certtool --verify --infile /home/testname/.task/ca.cert.pem --load-ca-certificate /home/testname/taskd/cert/ca.cert.pem
+
+certtool --verify --infile /home/testname/.task/First.cert.pem --load-ca-certificate /home/testname/taskd/cert/ca.cert.pem
+
+
+# manually verify the certificate of the taskserver against ca of task server:
+certtool --verify --infile /home/testname/taskd/cert/api.cert.pem --load-ca-certificate /home/testname/taskd/cert/ca.cert.pem
+
+certtool --verify --infile /home/testname/taskd/cert/server.cert.pem --load-ca-certificate /home/testname/taskd/cert/ca.cert.pem

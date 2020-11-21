@@ -1,0 +1,4 @@
+ExecStart=/usr/local/bin/taskd server --data /home/testname/taskd
+User=testname
+Group=testname
+WorkingDirectory=/home/testname/taskd

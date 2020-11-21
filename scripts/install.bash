@@ -47,9 +47,9 @@ LINUX_USERNAME=$(whoami)
 LINUX_GROUP=$(whoami)
 echo $LINUX_USERNAME
 export TASKDDATA=/home/$LINUX_USERNAME/taskd
-IP=$(hostname -f)
+#IP=$(hostname -f)
 #IP=0.0.0.0
-#IP=127.0.0.1
+IP=127.0.0.1
 #IP=localhost
 #IP=127.0.1.1
 echo $IP
@@ -80,7 +80,6 @@ rm pki/ca.key.pem
 rm pki/ca.template
 
 rm pki/crl.template
-
 
 ## Step A: install prerequisites
 # set script location
@@ -238,6 +237,7 @@ $(write_to_log $LOG_LOCATION $LOG_FILENAME $FUNCTION_OUTPUT)
 
 source ./scripts/D_configure_taskserver.sh
 echo "D_3"
+echo "setting ip=$IP"
 FUNCTION_OUTPUT=$(set_local_host_in_vars_file_of_pki $IP $PORT $TASKSERVER_TAR_NAME)
 LOG_FILENAME="D_3_set_local_host_in_vars_file_of_pki.txt"
 $(write_to_log $LOG_LOCATION $LOG_FILENAME $FUNCTION_OUTPUT)

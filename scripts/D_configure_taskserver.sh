@@ -1,4 +1,18 @@
 #!/bin/sh
+
+function swapline_containing_string {
+  local OLD_LINE_PATTERN=$1; shift
+  local NEW_LINE=$1; shift
+  local FILE=$1
+  local NEW=$(echo "${NEW_LINE}" | sed 's/\//\\\//g')
+  touch "${FILE}"
+  sed -i '/'"${OLD_LINE_PATTERN}"'/{s/.*/'"${NEW}"'/;h};${x;/./{x;q100};x}' "${FILE}"
+  if [[ $? -ne 100 ]] && [[ ${NEW_LINE} != '' ]]
+  then
+    echo "${NEW_LINE}" >> "${FILE}"
+  fi
+}
+
 mkdir_taskddata() {
 	TASKDDATA=$1
 	output=$(mkdir -p $TASKDDATA)
@@ -50,10 +64,17 @@ set_local_host_in_vars_file_of_pki() {
 	IP=$1
 	PORT=$2
 	TASKSERVER_TAR_NAME=$3
-	output=$(sed -i "s|CN=localhost|CN=$IP:$PORT|g" pki/vars)
+	swapline_containing_string "CN=" "CN=$IP:$PORT" "pki/vars"
 	echo $output
 	# TODO: write unit test to verify the localhost is changed correctly
 }
+modify_taskd_service_file(){
+	LINUX_USERNAME=$1
+	LINUX_GROUP=$2
+	TASKDDATA=$3
+	swapline_containing_string "ExecStart=" "ExecStart=/usr/local/bin/taskd server --data $TASKDDATA" "src/taskd.service"
+}
+
 
 
 generate_certificates_in_pki_of_sourcedir() {
@@ -180,19 +201,6 @@ start_taskdctl() {
 show_running_taskdctl() {
 	output=$(ps -leaf | grep taskd)
 	echo $output
-}
-
-function swapline_containing_string {
-  local OLD_LINE_PATTERN=$1; shift
-  local NEW_LINE=$1; shift
-  local FILE=$1
-  local NEW=$(echo "${NEW_LINE}" | sed 's/\//\\\//g')
-  touch "${FILE}"
-  sed -i '/'"${OLD_LINE_PATTERN}"'/{s/.*/'"${NEW}"'/;h};${x;/./{x;q100};x}' "${FILE}"
-  if [[ $? -ne 100 ]] && [[ ${NEW_LINE} != '' ]]
-  then
-    echo "${NEW_LINE}" >> "${FILE}"
-  fi
 }
 
 modify_taskd_service_file(){

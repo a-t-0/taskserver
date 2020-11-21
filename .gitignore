@@ -11,3 +11,9 @@ _CPack_Packages
 patches
 *.exe
 *~
+
+# added for automation
+*taskd-1.1.0/*
+scripts/logs*
+taskd-1.1.0.tar.gz
+scripts/taskd.service

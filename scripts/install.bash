@@ -47,9 +47,9 @@ LINUX_USERNAME=$(whoami)
 LINUX_GROUP=$(whoami)
 echo $LINUX_USERNAME
 export TASKDDATA=/home/$LINUX_USERNAME/taskd
-#IP=$(hostname -f)
+IP=$(hostname -f)
 #IP=0.0.0.0
-IP=127.0.0.1
+#IP=127.0.0.1
 #IP=localhost
 #IP=127.0.1.1
 echo $IP
